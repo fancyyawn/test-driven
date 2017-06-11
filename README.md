@@ -1,29 +1,69 @@
+# test driven
 
-## mock or suppress
+## service test with PowerMockito
 
-* mock's public: `when(productRepo.save(product)).thenReturn(product)`;
+### mock or suppress
 
-* spy's public: `doReturn(new Product()).when(productService).findByName("p1");`
+* mock's public: 
+```java
+when(productRepo.save(product)).thenReturn(product);
+```
 
-* spy's private: `doReturn(new Product()).when(productService, "findByNo", "n1");`
+* spy's public: 
+```java
+doReturn(new Product()).when(productService).findByName("p1");
+```
 
-* spy's private void: `doNothing().when(productService, "checkCategoryId", 0L);`
+* spy's private: 
+```java
+doReturn(new Product()).when(productService, "findByNo", "n1");
+```
 
-* spy's private void: `doThrow(new RuntimeException("category.invalid")).when(productService, "checkCategoryId", 0L);`
+* spy's private void: 
+```java
+doNothing().when(productService, "checkCategoryId", 0L);
+```
 
-* suppress static constructor: `@SuppressStaticInitializationFor("top.zhacker.testdriven.product.model.Product")`
+* spy's private void: 
+```java
+doThrow(new RuntimeException("category.invalid")).when(productService, "checkCategoryId", 0L);
+```
 
-* suppress instance constructor: `suppress(constructor(Product.class));`
 
-* suppress method invoke: `suppress(method(Product.class,"check", Product.class));`
+* suppress static constructor: 
+```java
+@SuppressStaticInitializationFor("top.zhacker.testdriven.product.model.Product")
+```
 
-* mock static method: `mockStatic(ProductGenerator.class); when(ProductGenerator.getNextId()).thenReturn("no");`
+* suppress instance constructor: 
+```java
+suppress(constructor(Product.class));
+```
 
-* mock static method void: `mockStatic(Product.class); doNothing().when(Product.class, "check", any());`
+* suppress method invoke: 
+```java
+suppress(method(Product.class,"check", Product.class));
+```
 
-* mock static method void: `mockStatic(Product.class); doThrow(new RuntimeException("check.fail")).when(Product.class, "check", any());`
+* mock static method: 
+```java
+mockStatic(ProductGenerator.class); when(ProductGenerator.getNextId()).thenReturn("no");
+```
 
-* mock constructor: `whenNew(Product.class).withArguments("invalid").thenReturn(mock(Product.class));`
+* mock static method void: 
+```java
+mockStatic(Product.class); doNothing().when(Product.class, "check", any());
+```
+
+* mock static method void: 
+```java
+mockStatic(Product.class); doThrow(new RuntimeException("check.fail")).when(Product.class, "check", any());
+```
+
+* mock constructor: 
+```java
+whenNew(Product.class).withArguments("invalid").thenReturn(mock(Product.class));
+```
 
 * mock different returns
 ```java
@@ -34,9 +74,13 @@
         return null;
     });
 ```
-## verify
+### verify
 
-* exception: exception.expectMessage("check.fail");
+* exception: 
+```java
+exception.expectMessage("check.fail");
+```
+
 * params: 
 ```java
     verify(productRepo).save((Product)argThat(p->{ //overload
@@ -49,5 +93,12 @@
     }));
    
 ```
-* verify private: `verifyPrivate(productService).invoke("updateProduct", product);`
-* verify static: `verifyStatic(times(1)); Product.check(product); // invoke static verify, important`
+* verify private: 
+```java
+verifyPrivate(productService).invoke("updateProduct", product);
+```
+
+* verify static: 
+```java
+verifyStatic(times(1)); Product.check(product); // invoke static verify, important
+```
