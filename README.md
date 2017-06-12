@@ -2,6 +2,34 @@
 
 ## service test with PowerMockito
 
+### setup PowerMockito
+```java
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ProductServiceImpl.class, ProductGenerator.class, Product.class})
+public class ProductServiceImplTest {
+    
+    @Mock
+    private ProductRepo productRepo;
+    
+    @Mock
+    private EventBus eventBus;
+    
+    @Rule
+    private ExpectedException exception = ExpectedException.none();
+    
+    private ProductServiceImpl productService;
+    
+    @Before
+    public void init(){
+        productService = spy(new ProductServiceImpl(productRepo, eventBus));
+        //Whitebox.setInternalState(productService, "productRepo", productRepo); //当为private时
+    }   
+}
+```
+* @PrepareForTest: 包含静态方法的类、待测试的类等
+* 待测试类要spy，而不是用mock。 另外，@InjectMocks不支持mock自身方法。当内部字段为private时，采用WhiteBox来设置内部状态
+* 异常验证可以用@Test(expected=Xxx.class), 但要深入时，用@Rule ExpectedException。
+
 ### mock or suppress
 
 * mock's public: 
@@ -78,6 +106,7 @@ whenNew(Product.class).withArguments("invalid").thenReturn(mock(Product.class));
 
 * exception: 
 ```java
+exception.expect(RuntimeException.class);
 exception.expectMessage("check.fail");
 ```
 

@@ -69,6 +69,7 @@ public class ProductServiceImplTest {
     @Before
     public void init(){
         productService = spy(new ProductServiceImpl(productRepo, eventBus));
+        //Whitebox.setInternalState(productService, "productRepo", productRepo); //当为private时
     }
     
     @Test
